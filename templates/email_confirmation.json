@@ -1,0 +1,8 @@
+{
+  "Template": {
+    "TemplateName": "EmailConfirmation",
+    "SubjectPart": "Welcome to Vocab Verdure!",
+    "HtmlPart": "<html><body><h1>Welcome to Vocab Verdure!</h1><p>We're thrilled to have you embark on your language learning journey with us. To get started, please <a href='{{url}}' target='_blank'>click here</a> to verify your email address.</p></body></html>",
+    "TextPart": "Welcome to Vocab Verdure! We're thrilled to have you on board for your language learning journey. Please copy and paste the following URL into your browser to verify your email: {{url}}"
+  }
+}

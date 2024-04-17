@@ -1,0 +1,8 @@
+{
+  "Template": {
+    "TemplateName":"TestMessage",
+    "SubjectPart":"Amazon SES Test Message",
+    "TextPart":"Hello! This is the text part of the message.",
+    "HtmlPart":"<html><body><h2>Hello!</h2><p>This is the HTML part of the message.</p></body></html>"
+  }
+}
