@@ -9,3 +9,5 @@ chmod 755 bootstrap
 zip function.zip bootstrap
 
 aws lambda update-function-code --function-name SesConfirm --zip-file fileb://function.zip
+
+./update-templates.sh
