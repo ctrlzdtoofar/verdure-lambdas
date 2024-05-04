@@ -65,6 +65,32 @@ func handleRequest(ctx context.Context, sqsEvent events.SQSEvent) error {
 	return nil
 }
 
+// sendEmail constructs and sends an email based on the user confirmation details using AWS SES.
+// This function first determines the appropriate email template name by invoking the determineTemplate
+// function, which formats the template name based on the confirmation type and language specified in the
+// UserConfirmation struct. It then creates a template data string with a URL included from the UserConfirmation.
+//
+// The function sets up the email parameters, including the recipient's address, sender's address, and
+// content, which consists of the chosen template and the template data. After setting up these parameters,
+// it sends the email via the provided SES service.
+//
+// Parameters:
+//
+//	ctx - The context for controlling cancellations and timeouts.
+//	sesSvc - The SES v2 client used to send the email.
+//	confirm - A struct containing user confirmation details including the type of confirmation,
+//	          the base URL for the confirmation link, user's email, etc.
+//	from - The email address from which the email is sent.
+//
+// Returns:
+//
+//	err - An error value which is non-nil in case of failures in sending the email. If the email
+//	      is successfully sent, the function returns nil.
+//
+// Usage:
+//
+//	This function is typically used in account creation or password reset flows where it is necessary
+//	to send a verification or reset link to the user's email address.
 func sendEmail(ctx context.Context, sesSvc sesv2.Client, confirm mdl.UserConfirmation, from string) (err error) {
 
 	templateName := determineTemplate(confirm.ConfirmationType, confirm.Lang)
@@ -86,8 +112,8 @@ func sendEmail(ctx context.Context, sesSvc sesv2.Client, confirm mdl.UserConfirm
 		},
 		EmailTags: []types.MessageTag{
 			{
-				Name:  aws.String("env"),
-				Value: aws.String("local"),
+				Name:  aws.String("email_type"),
+				Value: aws.String("confirmation"),
 			},
 		},
 	}
@@ -103,6 +129,23 @@ func sendEmail(ctx context.Context, sesSvc sesv2.Client, confirm mdl.UserConfirm
 	return
 }
 
+// determineTemplate generates the template name based on the confirmation type and language.
+// This function supports two types of confirmation: NewUser and PasswordReset. It formats
+// the template name by appending the properly cased language code to the base template name.
+// For 'NewUser', it prefixes with "EmailConfirmation", and for password resets, it uses
+// "PasswordResetConfirmation". If the language string is less than 2 characters long, it defaults
+// to the English template without a language suffix.
+//
+// Parameters:
+//
+//	confirmType - The type of confirmation, which determines the base part of the template name.
+//	lang - The ISO language code to append to the template name. The first letter will be
+//	       uppercase and the rest lowercase if the length is greater than 1; otherwise, it uses
+//	       the base template name.
+//
+// Returns:
+//
+//	templateName - The formatted template name as a string.
 func determineTemplate(confirmType mdl.ConfirmationType, lang string) (templateName string) {
 	if confirmType == mdl.NewUser {
 		if len(lang) > 1 {
@@ -114,7 +157,7 @@ func determineTemplate(confirmType mdl.ConfirmationType, lang string) (templateN
 	} else {
 		if len(lang) > 1 {
 			templateName = fmt.Sprintf("PasswordResetConfirmation%s",
-				strings.ToUpper(lang)+strings.ToLower(lang))
+				strings.ToUpper(lang[:1])+strings.ToLower(lang[1:]))
 		} else {
 			templateName = "PasswordResetConfirmation"
 		}

@@ -158,4 +158,26 @@ func TestHandleRequest(t *testing.T) {
 		t.Errorf("Failed to invoke handler with test scenario, data %v, error %v", confirm, err)
 	}
 
+	confirm.ConfirmationType = mdl.ResetPassword
+	// Serialize UserConfirmation to JSON
+	confirmationJSON, err = json.Marshal(confirm)
+	if err != nil {
+		fmt.Println("Error marshalling JSON:", err)
+		return
+	}
+
+	// Create an SQS event
+	sqsEvent = events.SQSEvent{
+		Records: []events.SQSMessage{
+			{
+				Body: string(confirmationJSON),
+			},
+		},
+	}
+
+	err = handleRequest(context.TODO(), sqsEvent)
+	if err != nil {
+		t.Errorf("Failed to invoke handler with test scenario, data %v, error %v", confirm, err)
+	}
+
 }
