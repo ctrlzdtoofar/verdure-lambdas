@@ -1,0 +1,8 @@
+{
+  "Template": {
+    "TemplateName": "EmailConfirmationDe",
+    "SubjectPart": "Willkommen bei Vocab Verdure!",
+    "HtmlPart": "<html><body><h1>Willkommen bei Vocab Verdure!</h1><p>Wir freuen uns sehr, dass Sie sich uns auf Ihrer Sprachlernreise anschließen. Um zu beginnen, bitte <a href='{{url}}' target='_blank'>klicken Sie hier</a>, um Ihre E-Mail-Adresse zu bestätigen.</p></body></html>",
+    "TextPart": "Willkommen bei Vocab Verdure! Wir freuen uns sehr, dass Sie sich uns auf Ihrer Sprachlernreise anschließen. Bitte kopieren Sie die folgende URL und fügen Sie sie in Ihren Browser ein, um Ihre E-Mail zu verifizieren: {{url}}"
+  }
+}

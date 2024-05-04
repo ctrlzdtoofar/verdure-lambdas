@@ -4,6 +4,7 @@
 > go build -v ./...
 
 ### To run tests:
+> source .env
 > go test -v ./...
 
 ### Build ses lambda locally
@@ -23,3 +24,6 @@
 ```zsh
 ./update-templates.sh
 ```
+
+### AWS CloudWatch
+https://us-east-2.console.aws.amazon.com/cloudwatch/home?region=us-east-2#logsV2:log-groups/log-group/$252Faws$252Flambda$252FSesConfirm

@@ -1,0 +1,8 @@
+{
+  "Template": {
+    "TemplateName": "PasswordResetConfirmationEs",
+    "SubjectPart": "Solicitud de restablecimiento de contraseña para Vocab Verdure",
+    "HtmlPart": "<h1>Solicitud de restablecimiento de contraseña</h1><p>Hemos recibido una solicitud para restablecer la contraseña de tu cuenta de Vocab Verdure. Si no has hecho esta solicitud, por favor ignora este correo electrónico. De lo contrario, por favor <a href='{{url}}' target='_blank'>haz clic aquí</a> para restablecer tu contraseña.</p><p>Si tienes problemas con el enlace anterior, también puedes copiar y pegar el siguiente enlace en tu navegador:</p><p>{{url}}</p>",
+    "TextPart": "Solicitud de restablecimiento de contraseña Hemos recibido una solicitud para restablecer la contraseña de tu cuenta de Vocab Verdure. Si no fuiste tú, por favor ignora este correo electrónico. De lo contrario, por favor copia y pega la siguiente URL en tu navegador para restablecer tu contraseña: {{url}}"
+  }
+}

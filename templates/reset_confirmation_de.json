@@ -1,0 +1,8 @@
+{
+  "Template": {
+    "TemplateName": "PasswordResetConfirmationDe",
+    "SubjectPart": "Ihre Anforderung zum Zurücksetzen des Passworts bei Vocab Verdure",
+    "HtmlPart": "<h1>Passwort-Zurücksetzung angefordert</h1><p>Wir haben eine Anforderung erhalten, das Passwort für Ihr Vocab Verdure-Konto zurückzusetzen. Wenn Sie diese Anforderung nicht gestellt haben, ignorieren Sie bitte diese E-Mail. Andernfalls klicken Sie bitte <a href='{{url}}' target='_blank'>hier</a>, um Ihr Passwort zurückzusetzen.</p><p>Wenn Sie Probleme mit dem oben genannten Button haben, können Sie auch den unten stehenden Link in Ihren Browser kopieren und einfügen:</p><p>{{url}}</p>",
+    "TextPart": "Passwort-Zurücksetzung angefordert Wir haben eine Anforderung erhalten, das Passwort für Ihr Vocab Verdure-Konto zurückzusetzen. Wenn Sie dies nicht veranlasst haben, ignorieren Sie bitte diese E-Mail. Andernfalls kopieren Sie bitte die folgende URL in Ihren Browser, um Ihr Passwort zurückzusetzen: {{url}}"
+  }
+}

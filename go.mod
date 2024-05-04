@@ -1,4 +1,4 @@
-module github.com/heather92115/verdure-lambdas
+module github.com/ctrlzdtoofar/verdure-lambdas
 
 go 1.22
 

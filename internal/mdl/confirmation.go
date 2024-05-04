@@ -20,6 +20,7 @@ type UserConfirmation struct {
 	BaseUrl          string           `json:"base_url"`
 	UserLoginID      int32            `json:"user_login_id"`
 	Email            string           `json:"email"`
+	Lang             string           `json:"lang"`
 	Token            string           `json:"token"`
 	ExpiresAtMillis  int64            `json:"expires_at_millis"`
 }
@@ -41,10 +42,11 @@ func (uc *UserConfirmation) JSON() string {
 
 // ConfirmUrL Creates the URL used with email confirmation.
 func (uc *UserConfirmation) ConfirmUrL() string {
-	return fmt.Sprintf("%s/confirm/%s/%d/%s",
+	return fmt.Sprintf("%s/confirm/%s/%d/%s/%s",
 		uc.BaseUrl,
 		strings.ToLower(string(uc.ConfirmationType)),
 		uc.UserLoginID,
+		uc.Lang,
 		uc.Token)
 }
 
