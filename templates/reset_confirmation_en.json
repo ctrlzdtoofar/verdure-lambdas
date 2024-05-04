@@ -1,0 +1,8 @@
+{
+  "Template": {
+    "TemplateName": "PasswordResetConfirmationEn",
+    "SubjectPart": "Your Vocab Verdure Password Reset Request",
+    "HtmlPart": "<h1>Password Reset Request</h1><p>We received a request to reset your password for your Vocab Verdure account. If you did not make this request, please ignore this email. Otherwise, please <a href='{{url}}' target='_blank'>click here</a> to reset your password.</p><p>If you’re having trouble with the link above, you can also copy and paste the link below into your browser:</p><p>{{url}}</p>",
+    "TextPart": "Password Reset Request We received a request to reset your password for your Vocab Verdure account. If this was not you, please ignore this email. Otherwise, please copy and paste the following URL into your browser to reset your password: {{url}}"
+  }
+}

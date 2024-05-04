@@ -27,7 +27,12 @@ aws logs create-log-group --log-group-name /aws/lambda/SesConfirm
 aws logs put-retention-policy --log-group-name /aws/lambda/SesConfirm --retention-in-days 3
 
 # Create email templates
-aws ses create-template --cli-input-json file://templates/email_confirmation.json
-aws ses create-template --cli-input-json file://templates/reset_confirmation.json
+aws ses create-template --cli-input-json file://templates/email_confirmation_en.json
+aws ses create-template --cli-input-json file://templates/email_confirmation_es.json
+aws ses create-template --cli-input-json file://templates/email_confirmation_de.json
+
+aws ses create-template --cli-input-json file://templates/reset_confirmation_en.json
+aws ses create-template --cli-input-json file://templates/reset_confirmation_es.json
+aws ses create-template --cli-input-json file://templates/reset_confirmation_de.json
 
 

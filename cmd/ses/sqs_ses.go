@@ -9,8 +9,9 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/sesv2"
 	"github.com/aws/aws-sdk-go-v2/service/sesv2/types"
-	"github.com/heather92115/verdure-lambdas/internal/mdl"
-	"github.com/heather92115/verdure-lambdas/internal/settings"
+	"github.com/ctrlzdtoofar/verdure-lambdas/internal/mdl"
+	"github.com/ctrlzdtoofar/verdure-lambdas/internal/settings"
+	"strings"
 )
 
 // handleRequest processes SQSEvent messages for email confirmation actions,
@@ -32,11 +33,6 @@ import (
 //   - An error if any issues occur during the processing of SQSEvent records, such
 //     as failures in loading AWS configurations, deserializing JSON, or sending emails
 //     via SES. Errors are wrapped with contextual information to aid in debugging.
-//
-// Example SES templates used are "EmailConfirmation" for new user confirmations
-// and "PasswordResetConfirmation" for password reset requests. The function logs
-// details about each processed message and reports on the success or failure of
-// each email sent.
 func handleRequest(ctx context.Context, sqsEvent events.SQSEvent) error {
 
 	cfg, err := config.LoadDefaultConfig(ctx)
@@ -54,7 +50,6 @@ func handleRequest(ctx context.Context, sqsEvent events.SQSEvent) error {
 			return fmt.Errorf("failed to deserialize confirmation json, %v", err)
 		}
 
-		templateData := fmt.Sprintf("{\"url\": \"%s\"}", confirm.ConfirmUrL())
 		fromAddress, err := settings.GetNoReplySecret(ctx, "noreply/Email")
 		if err != nil {
 			return fmt.Errorf("failed to get secret email from address, %v", err)
@@ -62,44 +57,70 @@ func handleRequest(ctx context.Context, sqsEvent events.SQSEvent) error {
 
 		fmt.Printf("Using From Address %s\n", fromAddress)
 
-		var templateName string
-		if confirm.ConfirmationType == mdl.NewUser {
-			templateName = "EmailConfirmation"
-		} else {
-			templateName = "PasswordResetConfirmation"
-		}
-
-		// Define Email Parameters
-		input := &sesv2.SendEmailInput{
-			Destination: &types.Destination{
-				ToAddresses: []string{
-					confirm.Email,
-				},
-			},
-			FromEmailAddress: &fromAddress,
-			Content: &types.EmailContent{
-				Template: &types.Template{
-					TemplateData: &templateData,
-					TemplateName: &templateName,
-				},
-			},
-			EmailTags: []types.MessageTag{
-				{
-					Name:  aws.String("env"),
-					Value: aws.String("local"),
-				},
-			},
-		}
-
-		// Send Email
-		_, err = sesSvc.SendEmail(ctx, input)
+		err = sendEmail(ctx, *sesSvc, *confirm, fromAddress)
 		if err != nil {
-			return fmt.Errorf("failed to send %s email, %v", templateName, err)
-		} else {
-			fmt.Printf("Email successfully sent to %s\n", confirm.Email)
+			return err
 		}
 	}
 	return nil
+}
+
+func sendEmail(ctx context.Context, sesSvc sesv2.Client, confirm mdl.UserConfirmation, from string) (err error) {
+
+	templateName := determineTemplate(confirm.ConfirmationType, confirm.Lang)
+	templateData := fmt.Sprintf("{\"url\": \"%s\"}", confirm.ConfirmUrL())
+
+	// Define Email Parameters
+	input := &sesv2.SendEmailInput{
+		Destination: &types.Destination{
+			ToAddresses: []string{
+				confirm.Email,
+			},
+		},
+		FromEmailAddress: &from,
+		Content: &types.EmailContent{
+			Template: &types.Template{
+				TemplateData: &templateData,
+				TemplateName: &templateName,
+			},
+		},
+		EmailTags: []types.MessageTag{
+			{
+				Name:  aws.String("env"),
+				Value: aws.String("local"),
+			},
+		},
+	}
+
+	// Send Email
+	_, err = sesSvc.SendEmail(ctx, input)
+	if err != nil {
+		return fmt.Errorf("failed to send %s email, %v", templateName, err)
+	} else {
+		fmt.Printf("Email successfully sent to %s\n", confirm.Email)
+	}
+
+	return
+}
+
+func determineTemplate(confirmType mdl.ConfirmationType, lang string) (templateName string) {
+	if confirmType == mdl.NewUser {
+		if len(lang) > 1 {
+			templateName = fmt.Sprintf("EmailConfirmation%s",
+				strings.ToUpper(lang[:1])+strings.ToLower(lang[1:]))
+		} else {
+			templateName = "EmailConfirmation"
+		}
+	} else {
+		if len(lang) > 1 {
+			templateName = fmt.Sprintf("PasswordResetConfirmation%s",
+				strings.ToUpper(lang)+strings.ToLower(lang))
+		} else {
+			templateName = "PasswordResetConfirmation"
+		}
+	}
+
+	return
 }
 
 // main sets up the Lambda function entry point by registering the handleRequest

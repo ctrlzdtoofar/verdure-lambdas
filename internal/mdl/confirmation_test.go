@@ -9,10 +9,11 @@ func TestUserConfirmationFromJson(t *testing.T) {
 	expectedUserLoginID := int32(123)
 	expectedBaseUrl := "http://localhost:3211"
 	expectedEmail := "tst123@example.com"
+	expectedLang := "en"
 	expectedToken := "abc123"
 	expectedExpiresAtMillis := int64(1672531200000) // Assuming a specific time for testing
 
-	jsonStr := `{"confirmation_type":"NewUser","base_url":"http://localhost:3211","user_login_id":123,"email":"tst123@example.com","token":"abc123","expires_at_millis":1672531200000}`
+	jsonStr := `{"confirmation_type":"NewUser","base_url":"http://localhost:3211","user_login_id":123,"email":"tst123@example.com","lang":"en","token":"abc123","expires_at_millis":1672531200000}`
 
 	confirmation, err := UserConfirmationFromJson(jsonStr)
 	if err != nil {
@@ -29,6 +30,10 @@ func TestUserConfirmationFromJson(t *testing.T) {
 
 	if confirmation.Email != expectedEmail {
 		t.Errorf("Expected Email %s, got %s", expectedEmail, confirmation.Email)
+	}
+
+	if confirmation.Lang != expectedLang {
+		t.Errorf("Expected Lang %s, got %s", expectedLang, confirmation.Lang)
 	}
 
 	if confirmation.Token != expectedToken {
